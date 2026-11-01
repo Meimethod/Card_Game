@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">lrj2023110420</string>
+    <string name="name">姓名</string>
+    <string name="student_id">学号</string>
+    <string name="phone">电话</string>
+    <string name="email">邮箱</string>
+    <string name="gender">性别</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="hobby">爱好</string>
+    <string name="max_score">最高分</string>
+    <string name="edit_info">修改个人信息</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="score">得分：%d</string>
+    <string name="reset_game">重置游戏</string>
+    <string name="exit">退出游戏</string>
+    <string name="start_game">开始翻牌游戏</string>
+
+    <!-- 用于格式化文本，消除拼接警告 -->
+    <string name="fmt_name">姓名：%s</string>
+    <string name="fmt_student_id">学号：%s</string>
+    <string name="fmt_gender">性别：%s</string>
+    <string name="fmt_phone">电话：%s</string>
+    <string name="fmt_email">邮箱：%s</string>
+    <string name="fmt_hobby">爱好：%s</string>
+    <string name="fmt_max_score">最高分：%d</string>
+</resources>
