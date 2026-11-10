@@ -25,4 +25,9 @@
     <string name="fmt_email">邮箱：%s</string>
     <string name="fmt_hobby">爱好：%s</string>
     <string name="fmt_max_score">最高分：%d</string>
+    <!--菜单、对话框文字-->
+    <string name="menu_about">关于</string>
+    <string name="about_dialog_title">翻牌游戏</string>
+    <string name="about_dialog_message">实验五 翻牌游戏\n24张卡牌，支持3牌匹配\n游戏规则：\n翻一次牌扣1分\n花色相同 +4分\n点数相同 +15分\n花色点数全部相同 +19分\n已匹配卡牌不可再次翻开</string>
+    <string name="dialog_ok">确定</string>
 </resources>

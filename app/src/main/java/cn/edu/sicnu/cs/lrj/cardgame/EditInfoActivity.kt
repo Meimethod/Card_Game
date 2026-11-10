@@ -24,36 +24,18 @@ class EditInfoActivity : AppCompatActivity() {
         val btnSave: Button = findViewById(R.id.btn_save)
         val btnCancel: Button = findViewById(R.id.btn_cancel)
 
-        //拿到传过来旧数据回填输入框
-        etName.setText(intent.getStringExtra("name"))
-        etStuId.setText(intent.getStringExtra("stuId"))
-        val oldGender = intent.getStringExtra("gender")
-        if(oldGender == getString(R.string.male)) rbMale.isChecked = true
-        if(oldGender == getString(R.string.female)) rbFemale.isChecked = true
-        etPhone.setText(intent.getStringExtra("phone"))
-        etEmail.setText(intent.getStringExtra("email"))
-        etHobby.setText(intent.getStringExtra("hobby"))
-
-        btnCancel.setOnClickListener {
-            finish()
+        btnSave.setOnClickListener {
+            val intent = Intent(this, CardGameActivity::class.java)
+            intent.putExtra("name", etName.text.toString())
+            intent.putExtra("stuId", etStuId.text.toString())
+            intent.putExtra("gender", if(rgGender.checkedRadioButtonId == R.id.rb_male) "男" else "女")
+            intent.putExtra("phone", etPhone.text.toString())
+            intent.putExtra("email", etEmail.text.toString())
+            intent.putExtra("hobby", etHobby.text.toString())
+            startActivity(intent)
         }
 
-        btnSave.setOnClickListener {
-            var selGender = ""
-            if(rgGender.checkedRadioButtonId == R.id.rb_male){
-                selGender = getString(R.string.male)
-            }else if(rgGender.checkedRadioButtonId == R.id.rb_female){
-                selGender = getString(R.string.female)
-            }
-
-            val resultIntent = Intent()
-            resultIntent.putExtra("name",etName.text.toString())
-            resultIntent.putExtra("stuId",etStuId.text.toString())
-            resultIntent.putExtra("gender",selGender)
-            resultIntent.putExtra("phone",etPhone.text.toString())
-            resultIntent.putExtra("email",etEmail.text.toString())
-            resultIntent.putExtra("hobby",etHobby.text.toString())
-            setResult(RESULT_OK,resultIntent)
+        btnCancel.setOnClickListener {
             finish()
         }
     }

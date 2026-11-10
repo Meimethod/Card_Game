@@ -1,20 +1,21 @@
 package cn.edu.sicnu.cs.lrj.cardgame
 
-import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
-import android.widget.GridView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class CardGameActivity : AppCompatActivity() {
-    private lateinit var tvScore: TextView
-    private lateinit var gridCards: GridView
     private lateinit var game: CardMatchingGame
-    private val cardNum = 12
+    private lateinit var tvScore: TextView
+    private lateinit var gridCards: RecyclerView
+    private lateinit var adapter: CardAdapter
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,45 +29,54 @@ class CardGameActivity : AppCompatActivity() {
         initGame()
 
         btnReset.setOnClickListener {
-            initGame()
+            game.reset(24)
+            refreshUI()
         }
         btnExit.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra("gameScore",game.score)
-            setResult(RESULT_OK,intent)
             finish()
         }
     }
 
     private fun initGame(){
-        game = CardMatchingGame(cardNum)
-        refreshGridView()
-    }
+        game = CardMatchingGame(24)
+        setGridByOrientation()
+        adapter = CardAdapter(game.cards){ index ->
+            val result = game.chooseCardAtIndex(index)
+            if(result){
+                refreshUI()
+                // 修改这里！！
+                if(game.isThreeOpened && !game.isCurrentMatched()){
+                    handler.postDelayed({
+                        game.hideUnmatchedCards()
+                        refreshUI()
+                    }, 800)
+                }
 
-    private fun refreshGridView(){
-        tvScore.text = getString(R.string.score,game.score)
-        gridCards.adapter = object : ArrayAdapter<Card>(this,0,game.cards){
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val card = getItem(position)!!
-                val btn:Button
-                if(convertView == null){
-                    btn = Button(context)
-                    btn.layoutParams = ViewGroup.LayoutParams(180,180)
-                }else{
-                    btn = convertView as Button
-                }
-                //翻牌逻辑：选中显示卡牌，没选中显示问号背面
-                if(card.isChosen){
-                    btn.text = card.toString()
-                }else{
-                    btn.text = "❓"
-                }
-                btn.setOnClickListener {
-                    game.chooseCardAtIndex(position)
-                    refreshGridView()
-                }
-                return btn
             }
         }
+
+        gridCards.adapter = adapter
+        refreshUI()
+    }
+
+    private fun setGridByOrientation(){
+        val orientation = resources.configuration.orientation
+        val spanCount = if(orientation == Configuration.ORIENTATION_LANDSCAPE) 6 else 4
+        gridCards.layoutManager = GridLayoutManager(this, spanCount)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setGridByOrientation()
+    }
+
+    private fun refreshUI(){
+        tvScore.text = "当前分数：${game.score}"
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 }
